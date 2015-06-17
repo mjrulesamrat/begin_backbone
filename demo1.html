@@ -4,14 +4,24 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Hello World in Backbone.js</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
   <!-- ========= -->
   <!-- Your HTML -->
   <!-- ========= -->
-    <div id="container">
-           Something come up here
-    </div>
+<div class="container">
+    <section id="todoapp">
+        <header id="header">
+            <h1>Todos</h1>
+            <input id="new-todo" placeholder="What needs to be done?">
+        </header>
+        <section id="main">
+            <ul id="todo-list"></ul>
+        </section>
+    </section>
+</div>
   <!-- ========= -->
   <!-- Libraries -->
   <!-- ========= -->
@@ -26,27 +36,58 @@
 
 
   <script type="text/javascript">
-  // adding view : 'Nameing convention is important So choose name wisely'
+
     var AppView = Backbone.View.extend({
-        // el - stands for element. Every view has a element associate in with HTML content will be rendered.
-        el: '#container',
-        // template added which is used from underscore.js
+        el: '.container',
         template: _.template("<h3>Hello <%= who %><h3>"),
 
-        // It's the first function called when this view it's instantiated.
         initialize: function(){
             this.render();
         },
-        // $el - it's a cached jQuery object (el), in which you can use jQuery functions to push content. Like the 'from Jay Modi' in this case.
+
         render: function(){
-            //this.$el.html("Hello World");
-            // calling and passing context to template
-            this.$el.html(this.template({who: 'from Jay Modi'}));
+            this.$el.append(this.template({who: 'from Jay Modi'}));
         }
     });
 
-    // making instance of AppView is the way of calling our Backbone View
     var app_view = new AppView();
+
+    var app = {} // creating namespace for this application
+
+    //  Define Model
+    app.Todo_model = Backbone.Model.extend({
+        defaults:{
+            title: '',
+            completed: false,
+            checked: false
+        }
+    });
+
+    // Test till here by trying in colsole below code
+    // var todo = new app.Todo({title: 'Learn Backbone.js', completed: false}); // create object with the attributes specified.
+    // todo.get('title'); // "Learn Backbone.js"
+    // todo.get('completed'); // false
+    // todo.get('created_at'); // undefined
+    // todo.set('created_at', Date());
+    // todo.get('created_at'); // "Wed Sep 12 2012 12:51:17 GMT-0400 (EDT)"
+
+    // Define Collection
+    var app.TodoList = Backbone.Collection.extend({
+        model: app.Todo_model,
+        localstorage: new Store("backbone-todo")
+    });
+
+    // call above collection(initilize)
+    app.todo_list = new app.TodoList();
+
+    // var todoList = new app.TodoList()
+    // todoList.create({title: 'Learn Backbone\'s Collection'}); // notice: that `completed` will be set to false by default.
+    // var lmodel = new app.Todo({title: 'Learn Models', completed: true});
+    // todoList.add(lmodel);
+    // todoList.pluck('title');     // ["Learn Backbone's Collection", "Learn Models"]
+    // todoList.pluck('completed'); // [false, true]
+    // JSON.stringify(todoList);    // "[{"title":"Learn Backbone's Collection","completed":false,"id":"d9763e99-2267-75f5-62c3-9d7e40742aa6"},{"title":"Learn Models","completed":true}]"
+
 
   </script>
 
